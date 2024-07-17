@@ -1,19 +1,13 @@
 import {test, expect} from '@playwright/test'
+import LoginPage from './support/pageobjectmodel/pages/login.page';
+import DashboardPage from './support/pageobjectmodel/pages/dashboard.page';
 
-test('has title', async ({ page }) => {
-    await page.goto('https://opensource-demo.orangehrmlive.com/');
-    await expect(page).toHaveTitle('OrangeHRM')
-});
+test('Login to the system',async({page})=>{
 
-test('is logo visible', async({page})=>{
-    await page.goto('https://opensource-demo.orangehrmlive.com/');
-    const logo = await page.getByAltText('company-branding')
-    expect(logo).toBeVisible
-});
+    const loginPage = new LoginPage(page);
+    const dashboardPage = new DashboardPage(page);
 
-test('login',async({page})=>{
-    await page.goto('https://opensource-demo.orangehrmlive.com/');
-    await page.getByPlaceholder('Username').fill('Admin')
-    await page.getByPlaceholder('Password').fill('admin123')
-    await page.getByRole('button',{name: 'Log in'}).click;
+    await loginPage.goto();
+    await loginPage.login('Admin','admin123');
+    await dashboardPage.assertDashboardPageLoaded();
 })
